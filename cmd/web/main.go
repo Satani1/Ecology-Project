@@ -1,26 +1,38 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 )
 
-func main() {
-	rMux := mux.NewRouter()
+type Applicaton struct {
+	errogLog *log.Logger
+	infoLog  *log.Logger
+}
 
+const addr string = "localhost:9000"
+
+func main() {
 	//logs
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-	rMux.HandleFunc("/", home).Methods("GET")
+	//app struct
+	app := &Applicaton{
+		errogLog: errorLog,
+		infoLog:  infoLog,
+	}
+	//Server config and router
+	srv := &http.Server{
+		Addr:     addr,
+		ErrorLog: errorLog,
+		Handler:  app.routes(),
+	}
 
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	rMux.Handle("/static/", http.StripPrefix("/static", fileServer))
-
-	infoLog.Printf("Launching server!")
-	err := http.ListenAndServe("localhost:9000", rMux)
+	//launch
+	infoLog.Printf("Launching server on %s", addr)
+	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
 
