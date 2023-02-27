@@ -2,27 +2,50 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"html/template"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
-var templates *template.Template
-
 func main() {
-	templates = template.Must(template.ParseGlob("templates/*.html"))
+	rMux := mux.NewRouter()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", indexHandler).Methods("GET")
-	r.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		if _, err := w.Write([]byte("Hello, users!")); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}).Methods("GET")
-	http.ListenAndServe("localhost:9000", r)
+	//logs
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	rMux.HandleFunc("/", home).Methods("GET")
+
+	fileServer := http.FileServer(http.Dir("./ui/static/"))
+	rMux.Handle("/static/", http.StripPrefix("/static", fileServer))
+
+	infoLog.Printf("Launching server!")
+	err := http.ListenAndServe("localhost:9000", rMux)
+	errorLog.Fatal(err)
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	templates.ExecuteTemplate(w, "index.html", nil)
+type neuteredFileSystem struct {
+	fs http.FileSystem
+}
+
+func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
+	f, err := nfs.fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	s, err := f.Stat()
+	if s.IsDir() {
+		index := filepath.Join(path, "index.html")
+		if _, err := nfs.fs.Open(index); err != nil {
+			closeErr := f.Close()
+			if closeErr != nil {
+				return nil, closeErr
+			}
+
+			return nil, err
+		}
+	}
+
+	return f, nil
 }
