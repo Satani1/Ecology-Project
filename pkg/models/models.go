@@ -11,5 +11,9 @@ type User struct {
 	ID          int
 	FirstName   string
 	LastName    string
+	Username    string
 	DateCreated time.Time
+	Rating      int
+	Email       string
+	Password    string
 }
