@@ -17,3 +17,15 @@ type User struct {
 	Email       string
 	Password    string
 }
+
+type Marker struct {
+	ID          int
+	Name        string
+	Description string
+	Address     string
+	Latitude    float64
+	Longitude   float64
+	Type        int
+	Status      int
+	DateCreated time.Time
+}

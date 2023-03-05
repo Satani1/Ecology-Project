@@ -11,7 +11,7 @@ type UserModel struct {
 }
 
 func (m *UserModel) Insert(firstName, lastName string) (int, error) {
-	stmt := `insert into users (firstName, lastName, dateCreated) values (?, ?,utc_timestamp())`
+	stmt := `insert into ecologydb.users (firstName, lastName, dateCreated) values (?, ?,utc_timestamp())`
 
 	result, err := m.DB.Exec(stmt, firstName, lastName)
 	if err != nil {

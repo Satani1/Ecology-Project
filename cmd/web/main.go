@@ -10,9 +10,10 @@ import (
 )
 
 type Applicaton struct {
-	errogLog *log.Logger
-	infoLog  *log.Logger
-	usersDB  *mysql.UserModel
+	errogLog  *log.Logger
+	infoLog   *log.Logger
+	usersDB   *mysql.UserModel
+	markersDB *mysql.MarkerModel
 }
 
 const addr string = "localhost:9000"

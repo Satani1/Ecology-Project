@@ -115,3 +115,48 @@ func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *Applicaton) mapPage(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/map" {
+		app.NotFound(w)
+		return
+	}
+	ts, err := template.ParseFiles("./ui/html/mapTest.html")
+	if err != nil {
+		app.ServeError(w, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = ts.Execute(w, nil)
+	if err != nil {
+		app.ServeError(w, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
+	//check method
+	if r.Method == "POST" {
+		name := r.FormValue("marker-name")
+		desc := r.FormValue("marker-description")
+		add := r.FormValue("marker-address")
+		status := 1
+		typ := 1
+		if _, err := app.markersDB.Insert(name, desc, add, status, typ); err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		http.Redirect(w, r, "/map", http.StatusSeeOther)
+
+	} else {
+		//return error404 if method wasn't POST
+		app.NotFound(w)
+		return
+	}
+
+}
+
+func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
+
+}

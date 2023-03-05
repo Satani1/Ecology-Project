@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Карта с метками</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=bfcc685c-c4be-4b2f-a3c4-da8b7e90fc24&lang=ru_RU" type="text/javascript"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        .popup {
+            position: absolute;
+            z-index: 1000;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .popup input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .popup input[type="submit"] {
+            padding: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="popup" class="popup" style="display: none;">
+    <form id="marker-form">
+        <input type="text" name="title" placeholder="Название метки">
+        <input type="text" name="description" placeholder="Описание метки">
+        <input type="submit" value="Создать метку">
+    </form>
+</div>
+<script>
+    ymaps.ready(init);
+
+    function init() {
+        var map = new ymaps.Map("map", {
+            center: [55.76, 37.64],
+            zoom: 10
+        },
+            yellowCollection = new ymaps.GeoObjectCollection(null, {
+                preset: 'islands#yellowIcon'
+            }));
+
+        map.events.add('click', function(e) {
+            var coords = e.get('coords');
+            showPopup(coords);
+        });
+
+        function showPopup(coords) {
+            var popup = document.getElementById('popup');
+            var form = document.getElementById('marker-form');
+            var title = form.querySelector('input[name="title"]');
+            var description = form.querySelector('input[name="description"]');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                var marker = new ymaps.Placemark(coords, {
+                    hintContent: title.value,
+                    balloonContent: description.value
+                });
+
+                map.geoObjects.add(marker);
+
+                popup.style.display = 'none';
+            });
+
+            popup.style.display = 'block';
+            popup.style.left = coords[0] + 'px';
+            popup.style.top = coords[1] + 'px';
+        }
+    }
+</script>
+</body>
+</html>
