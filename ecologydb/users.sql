@@ -7,6 +7,6 @@ create table users
     rating      int         null,
     dateCreated datetime    not null,
     email       varchar(40) null,
-    username    varchar(30) not null
+    username    varchar(30) null
 );
 
