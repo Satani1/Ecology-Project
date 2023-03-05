@@ -5,9 +5,6 @@ body {
     padding: 0;
     border: 0;
     min-width: 1100px;
-    /* background-image: url(img/back.svg);
-    background-repeat: no-repeat;
-    background-size: cover;  */
 }
 
 
@@ -109,5 +106,72 @@ body {
     padding-top: 25px;
 }
 
+/* frame */
 
+.wr-title {
+    font-size: 40px;
+    font-weight: 600;
+    font-family: 'Raleway', sans-serif;
+    color: rgba(18, 18, 18, 1);
+}
 
+.wr-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Raleway', sans-serif;
+    color: rgba(18, 18, 18, 0.75);
+    margin-top: 20px;
+}
+
+.btn-wr {
+    color: #ffff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Raleway', sans-serif;
+
+    background-color: rgba(18, 18, 18, 1);
+    padding: 12.5px 30px;
+    border-radius: 16px;
+}
+
+.wr-btn {
+    margin-top: 72px;
+}
+
+.wr-text {
+    margin-left: 70px;
+    margin-top: 60px; 
+}
+
+.wr-border {
+    background-color: rgba(241, 241, 241, 1);
+    width: 550px;
+    height: 502px;
+
+    border-radius:  0 30px 30px 0;
+}
+
+.slider {
+    animation: sliderAnimate 30s infinite ease;
+    width: 2200px;
+    height: 400px;
+    clear: both;
+    position: relative;
+}
+
+.slide-1, .slide-2{
+    display: flex;
+    border-radius: 30px;
+    
+}
+
+.wrapper {
+    margin-top: 60px;
+}
+
+.wr-ph {
+    width: 550px;
+    height: 502px;
+    text-align: center;
+}
