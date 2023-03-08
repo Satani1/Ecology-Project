@@ -15,6 +15,7 @@ func (app *Applicaton) Routes() *mux.Router {
 
 	rMux.HandleFunc("/map", app.mapPage)
 	rMux.HandleFunc("/savemarker", app.SaveMarker)
+	rMux.HandleFunc("/photo", app.UploadPhoto)
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	rMux.Handle("/static/", http.StripPrefix("/static", fileServer))

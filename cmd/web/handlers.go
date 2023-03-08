@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -143,15 +145,56 @@ func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
 		add := r.FormValue("marker-address")
 		status := 1
 		typ := 1
-		if _, err := app.markersDB.Insert(name, desc, add, status, typ); err != nil {
-			app.ServeError(w, err)
-			return
-		}
+		//if _, err := app.markersDB.Insert(name, desc, add, status, typ); err != nil {
+		//	app.ServeError(w, err)
+		//	return
+		//}
+		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\nstatus: %v\ntype: %v\n", name, desc, add, status, typ)
 		http.Redirect(w, r, "/map", http.StatusSeeOther)
 
 	} else {
 		//return error404 if method wasn't POST
 		app.NotFound(w)
+		return
+	}
+
+}
+
+const MAX_UPLOAD_SIZE = 5 << 20
+
+func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		//max upload size
+		r.ParseMultipartForm(MAX_UPLOAD_SIZE)
+
+		//get handler for filename, size and headers
+		file, handler, err := r.FormFile("marker-photo")
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		defer file.Close()
+
+		fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+		fmt.Printf("File Size: %+v\n", handler.Size)
+		fmt.Printf("MIME Header: %+v\n", handler.Header)
+
+		//create a file
+		dst, err := os.Create(handler.Filename)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		defer dst.Close()
+
+		//saving a copy of file
+		if _, err = io.Copy(dst, file); err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		fmt.Fprintf(w, "Successfully Uploaded File\n")
+	} else {
+		app.ServeError(w, errors.New("Error with http method"))
 		return
 	}
 

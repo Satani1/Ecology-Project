@@ -29,13 +29,21 @@
 <button id="add-marker-btn">Создать метку</button>
 
 <h3>Введите данные метки</h3>
-    <form id="marker-form-data" method="post" action="/savemarker">
+    <form id="marker-form-data" method="POST" action="/savemarker">
         <label for="marker-name">Название:</label><br>
-        <input type="text" id="marker-name" name="-name" required><br>
+        <input type="text" id="marker-name" name="marker-name" required><br>
         <label for="marker-description">Описание:</label><br>
-        <textarea id="marker-description" name="description"></textarea><br>
+        <textarea id="marker-description" name="marker-description"></textarea><br>
         <label for="marker-address">Адрес:</label><br>
         <input type="text" id="marker-address" name="marker-address" required><br><br>
-        <button type="submit">Отправить данные</button></form>
+        <label for = "marker-photo">Загрузите фото</label>
+        <input type = "file" id="marker-photo" name = "marker-photo" multiple accept="image/*"><br><br>
+        <button type="submit">Отправить данные</button>
+    </form>
+    <form id = "photo-form-data" enctype="multipart/form-data" method = "POST" action = "/photo">
+        <label for = "marker-photo">Загрузите фото</label>
+        <input type = "file" id="marker-photo" name = "marker-photo" multiple accept="image/*"><br><br>
+        <button type="submit">Отправить данные</button>
+    </form>
 </body>
 </html>
