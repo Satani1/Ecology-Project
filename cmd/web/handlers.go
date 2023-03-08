@@ -2,6 +2,7 @@ package main
 
 import (
 	"ecogoly/pkg/models"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -143,18 +144,38 @@ func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("marker-name")
 		desc := r.FormValue("marker-description")
 		add := r.FormValue("marker-address")
-		status := 1
-		typ := 1
-		//if _, err := app.markersDB.Insert(name, desc, add, status, typ); err != nil {
-		//	app.ServeError(w, err)
-		//	return
-		//}
-		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\nstatus: %v\ntype: %v\n", name, desc, add, status, typ)
+		if _, err := app.markersDB.Insert(name, desc, add); err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\n", name, desc, add)
 		http.Redirect(w, r, "/map", http.StatusSeeOther)
 
 	} else {
 		//return error404 if method wasn't POST
 		app.NotFound(w)
+		return
+	}
+
+}
+
+func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
+	markers, err := app.markersDB.GetAll()
+	if err != nil {
+		app.ServeError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(markers)
+}
+
+// testing markersDB
+func (app *Applicaton) testDB(w http.ResponseWriter, r *http.Request) {
+	name := "Test"
+	desc := "Тест описания"
+	add := "Москва, варшавское шоссе, 10"
+	if _, err := app.markersDB.Insert(name, desc, add); err != nil {
+		app.ServeError(w, err)
 		return
 	}
 
@@ -178,9 +199,10 @@ func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Uploaded File: %+v\n", handler.Filename)
 		fmt.Printf("File Size: %+v\n", handler.Size)
 		fmt.Printf("MIME Header: %+v\n", handler.Header)
-
+		//filepath
+		var dstPath = "ui/html/photoDB" + handler.Filename
 		//create a file
-		dst, err := os.Create(handler.Filename)
+		dst, err := os.Create(dstPath)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -192,14 +214,10 @@ func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 			app.ServeError(w, err)
 			return
 		}
+
 		fmt.Fprintf(w, "Successfully Uploaded File\n")
 	} else {
 		app.ServeError(w, errors.New("Error with http method"))
 		return
 	}
-
-}
-
-func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
-
 }

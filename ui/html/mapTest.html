@@ -25,7 +25,6 @@
     </style>
 </head>
 <body>
-<div id="map"></div>
 <button id="add-marker-btn">Создать метку</button>
 
 <h3>Введите данные метки</h3>
@@ -45,5 +44,35 @@
         <input type = "file" id="marker-photo" name = "marker-photo" multiple accept="image/*"><br><br>
         <button type="submit">Отправить данные</button>
     </form>
+
+
+<div id="map" style="width: 100%; height: 600px;"></div>
 </body>
+<script type = text/javascript>
+    ymaps.ready(init);
+
+    function init() {
+        const map = new ymaps.Map('map', {
+            center: [55.76, 37.64],
+            zoom: 10
+        });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/m');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                data.forEach(function(place) {
+                    const marker = new ymaps.Placemark([place.latitude, place.longitude], {
+                        hintContent: place.name,
+                        balloonContentHeader: place.name,
+                        balloonContentFooter: '<img src="https://www.linkpicture.com/q/photo_2022-12-24_22-51-01.jpg" type="image" height="153" width="200" alt = "photo">',
+                    });
+                    map.geoObjects.add(marker);
+                });
+            }
+        };
+        xhr.send();
+    }
+</script>
 </html>

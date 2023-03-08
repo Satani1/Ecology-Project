@@ -70,7 +70,8 @@
                 var placemark = new ymaps.Placemark(coords, {
                     hintContent: name,
                     balloonContentHeader: name,
-                    balloonContentBody: description
+                    balloonContentBody: description,
+                    balloonContentFooter: '<img src="/ui/html/photoDB/1.jpg" height="153" width="200">',
                 });
                 map.geoObjects.add(placemark);
                 markerForm.style.display = 'none';

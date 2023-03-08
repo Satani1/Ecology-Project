@@ -24,16 +24,23 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	db, err := openDB(dsn)
+	userDB, err := openDB(dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	defer db.Close()
+	defer userDB.Close()
+
+	markerDB, err := openDB(dsn)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	defer markerDB.Close()
 	//app struct
 	App := &Applicaton{
-		errogLog: errorLog,
-		infoLog:  infoLog,
-		usersDB:  &mysql.UserModel{DB: db},
+		errogLog:  errorLog,
+		infoLog:   infoLog,
+		usersDB:   &mysql.UserModel{DB: userDB},
+		markersDB: &mysql.MarkerModel{DB: markerDB},
 	}
 	//Server config and router
 	srv := &http.Server{

@@ -14,6 +14,8 @@ func (app *Applicaton) Routes() *mux.Router {
 	rMux.HandleFunc("/p", app.ViewProfile)
 
 	rMux.HandleFunc("/map", app.mapPage)
+	rMux.HandleFunc("/testDB", app.testDB)
+	rMux.HandleFunc("/m", app.getMarkers).Methods("GET")
 	rMux.HandleFunc("/savemarker", app.SaveMarker)
 	rMux.HandleFunc("/photo", app.UploadPhoto)
 

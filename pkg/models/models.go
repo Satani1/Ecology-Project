@@ -20,12 +20,18 @@ type User struct {
 
 type Marker struct {
 	ID          int
-	Name        string
-	Description string
-	Address     string
-	Latitude    float64
-	Longitude   float64
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Address     string  `json:"address"`
+	Latitude    float64 `json:"latitude"`
+	Longitude   float64 `json:"Longitude"`
 	Type        int
 	Status      int
 	DateCreated time.Time
+}
+type Marker2 struct {
+	ID        int     `json:"id"`
+	Name      string  `json:"name"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
 }
