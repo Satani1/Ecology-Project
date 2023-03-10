@@ -1,4 +1,4 @@
-create table markers
+create table ecologydb.markers
 (
     mark_id     int auto_increment
         primary key,

@@ -1,4 +1,4 @@
-create table users
+create table ecologydb.users
 (
     ID          int auto_increment
         primary key,

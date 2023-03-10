@@ -168,6 +168,47 @@ func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(markers)
 }
+func (app *Applicaton) updateMarkerToWork(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		id, err := strconv.Atoi(r.URL.Query().Get("id"))
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		err = app.markersDB.UpdateMarkerToWork(id)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		http.Redirect(w, r, "/map", http.StatusSeeOther)
+	} else {
+		app.NotFound(w)
+		return
+	}
+
+}
+
+func (app *Applicaton) closeMarker(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		id, err := strconv.Atoi(r.URL.Query().Get("id"))
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+
+		err = app.markersDB.Delete(id)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+
+		http.Redirect(w, r, "/map", http.StatusSeeOther)
+	} else {
+		app.NotFound(w)
+		return
+	}
+
+}
 
 // testing markersDB
 func (app *Applicaton) testDB(w http.ResponseWriter, r *http.Request) {
@@ -200,7 +241,7 @@ func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("File Size: %+v\n", handler.Size)
 		fmt.Printf("MIME Header: %+v\n", handler.Header)
 		//filepath
-		var dstPath = "ui/html/photoDB" + handler.Filename
+		var dstPath = "ui/html/photoDB/" + handler.Filename
 		//create a file
 		dst, err := os.Create(dstPath)
 		if err != nil {

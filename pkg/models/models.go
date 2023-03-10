@@ -30,8 +30,10 @@ type Marker struct {
 	DateCreated time.Time
 }
 type Marker2 struct {
-	ID        int     `json:"id"`
-	Name      string  `json:"name"`
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Status      string `json:"status"`
+	PathToPhoto string `json:"pathToPhoto"`
 }
