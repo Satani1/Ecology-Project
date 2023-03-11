@@ -11,10 +11,10 @@ type MarkerModel struct {
 	DB *sql.DB
 }
 
-func (m *MarkerModel) Insert(name, desc, addr string) (int, error) {
-	stmt := `insert into ecologydb.markers (name, description, address) values (?, ?, ?)`
+func (m *MarkerModel) Insert(name, desc, addr, pathTo string) (int, error) {
+	stmt := `insert into ecologydb.markers (name, description, address, pathToPhoto) values (?, ?, ?, ?)`
 
-	result, err := m.DB.Exec(stmt, name, desc, addr)
+	result, err := m.DB.Exec(stmt, name, desc, addr, pathTo)
 	if err != nil {
 		return 0, err
 	}
@@ -106,14 +106,4 @@ func (m *MarkerModel) GetPhotoPath(id int) (string, error) {
 		}
 	}
 	return s.PathToPhoto, nil
-}
-
-func (m *MarkerModel) PutPhotoPath(path string, id int) (error) {
-	stmt := `update ecologydb.markers set pathToPhoto = ? where mark_id = ?`
-
-	_, err := m.DB.Exec(stmt, path, id)
-	if err != nil {
-		return err
-	}
-	return nil
 }

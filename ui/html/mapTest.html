@@ -29,18 +29,13 @@
 <button id="add-marker-btn">Создать метку</button>
 <div id = "divMarker">
     <h3>Введите данные метки</h3>
-    <form id="marker-form-data" enctype = "multipart/form-data" method="POST" action="/photo">
+    <form id="marker-form-data" enctype = "multipart/form-data" method="POST" action="/savemarker">
         <label for="marker-name">Название:</label><br>
         <input type="text" id="marker-name" name="marker-name" required><br>
         <label for="marker-description">Описание:</label><br>
         <textarea id="marker-description" name="marker-description"></textarea><br>
         <label for="marker-address">Адрес:</label><br>
         <input type="text" id="marker-address" name="marker-address" required><br><br>
-        <label for = "marker-photo">Загрузите фото</label>
-        <input type = "file" id="marker-photo" name = "marker-photo" multiple accept="image/*"><br><br>
-        <button type="submit">Отправить данные</button>
-    </form>
-    <form id = "photo-form-data" enctype="multipart/form-data" method = "POST" action = "/photo">
         <label for = "marker-photo">Загрузите фото</label>
         <input type = "file" id="marker-photo" name = "marker-photo" multiple accept="image/*"><br><br>
         <button type="submit">Отправить данные</button>
@@ -78,7 +73,7 @@
                                 '<input type="submit" name="upvote" value="Я хочу здесь убраться!" />\n' +
                                 '</form>'
                             } else if (place.status == "В работе") {
-                                dynamicBlock = '<h3>В работе</h3>' +
+                                dynamicBlock =
                                     '<button onClick="ShowHideForm()">Фото отчет</button>' +
                                     '<div id="MarkerReport">' +
                                     '<form action='+actionReport+ ' enctype="multipart/form-data" method="POST">' +
@@ -96,7 +91,7 @@
                                 balloonContentBody:
                                     '<p>'+place.description+'</p>' +
                                     '<p>Адрес места: '+place.address+'</p>' +
-                                    '<p>Статус метки: ' + place.status+'</p>'+
+                                    '<p>Статус метки: ' +place.status+'</p>'+
                                     '<img src="https://www.linkpicture.com/q/garbage_1.jpg" type="image" height="250" width="200" alt = "photo"><br>',
                                 balloonContentFooter:   dynamicBlock,
 

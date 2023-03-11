@@ -138,25 +138,70 @@ func (app *Applicaton) mapPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
+//func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
+//	//check method
+//	if r.Method == "POST" {
+//		name := r.FormValue("marker-name")
+//		desc := r.FormValue("marker-description")
+//		add := r.FormValue("marker-address")
+//		if _, err := app.markersDB.Insert(name, desc, add); err != nil {
+//			app.ServeError(w, err)
+//			return
+//		}
+//		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\n", name, desc, add)
+//		http.Redirect(w, r, "/map", http.StatusSeeOther)
+//
+//	} else {
+//		//return error404 if method wasn't POST
+//		app.NotFound(w)
+//		return
+//	}
+//
+//}
+
+func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 	//check method
 	if r.Method == "POST" {
 		name := r.FormValue("marker-name")
 		desc := r.FormValue("marker-description")
 		add := r.FormValue("marker-address")
-		if _, err := app.markersDB.Insert(name, desc, add); err != nil {
+
+		//get handler for filename, size and headers
+		file, handler, err := r.FormFile("marker-photo")
+		if err != nil {
 			app.ServeError(w, err)
 			return
 		}
-		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\n", name, desc, add)
-		http.Redirect(w, r, "/map", http.StatusSeeOther)
+		defer file.Close()
 
+		//filepath
+		var dstPath = "ui/html/photoDB/" + handler.Filename
+		//create a file
+		dst, err := os.Create(dstPath)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		defer dst.Close()
+
+		//saving a copy of file
+		if _, err := io.Copy(dst, file); err != nil {
+			app.ServeError(w, err)
+			return
+		}
+		//insert text data and path to photo in the db markerks
+		_, err = app.markersDB.Insert(name, desc, add, dstPath)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
+
+		//redirect back to the /map page
+		http.Redirect(w, r, "/map", http.StatusSeeOther)
 	} else {
-		//return error404 if method wasn't POST
-		app.NotFound(w)
+		app.ServeError(w, errors.New("Error with http method"))
 		return
 	}
-
 }
 
 func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
@@ -205,18 +250,6 @@ func (app *Applicaton) closeMarker(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/map", http.StatusSeeOther)
 	} else {
 		app.NotFound(w)
-		return
-	}
-
-}
-
-// testing markersDB
-func (app *Applicaton) testDB(w http.ResponseWriter, r *http.Request) {
-	name := "Test"
-	desc := "Тест описания"
-	add := "Москва, варшавское шоссе, 10"
-	if _, err := app.markersDB.Insert(name, desc, add); err != nil {
-		app.ServeError(w, err)
 		return
 	}
 
