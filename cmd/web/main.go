@@ -10,9 +10,10 @@ import (
 )
 
 type Applicaton struct {
-	errogLog *log.Logger
-	infoLog  *log.Logger
-	usersDB  *mysql.UserModel
+	errogLog  *log.Logger
+	infoLog   *log.Logger
+	usersDB   *mysql.UserModel
+	markersDB *mysql.MarkerModel
 }
 
 const addr string = "localhost:9000"
@@ -23,16 +24,23 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	db, err := openDB(dsn)
+	userDB, err := openDB(dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	defer db.Close()
+	defer userDB.Close()
+
+	markerDB, err := openDB(dsn)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	defer markerDB.Close()
 	//app struct
 	App := &Applicaton{
-		errogLog: errorLog,
-		infoLog:  infoLog,
-		usersDB:  &mysql.UserModel{DB: db},
+		errogLog:  errorLog,
+		infoLog:   infoLog,
+		usersDB:   &mysql.UserModel{DB: userDB},
+		markersDB: &mysql.MarkerModel{DB: markerDB},
 	}
 	//Server config and router
 	srv := &http.Server{
@@ -57,31 +65,3 @@ func openDB(dsn string) (*sql.DB, error) {
 	}
 	return db, nil
 }
-
-/*
-type neuteredFileSystem struct {
-	fs http.FileSystem
-}
-
-func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
-	f, err := nfs.fs.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	s, err := f.Stat()
-	if s.IsDir() {
-		index := filepath.Join(path, "index.html")
-		if _, err := nfs.fs.Open(index); err != nil {
-			closeErr := f.Close()
-			if closeErr != nil {
-				return nil, closeErr
-			}
-
-			return nil, err
-		}
-	}
-
-	return f, nil
-}
-*/

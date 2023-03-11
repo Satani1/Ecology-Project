@@ -1,0 +1,13 @@
+body {
+    line-height: 1.5;
+    background-color: black;
+    color: #34495E;
+    overflow-y: scroll;
+}
+html, body {
+    height: 100%;
+}
+a {
+    text-decoration-color: #ff0900;
+    cursor: pointer;
+}
