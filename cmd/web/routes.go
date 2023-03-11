@@ -8,7 +8,7 @@ import (
 func (app *Applicaton) Routes() *mux.Router {
 	rMux := mux.NewRouter()
 
-	rMux.HandleFunc("/", app.Home).Methods("GET")
+	//rMux.HandleFunc("/", app.Home).Methods("GET")
 	rMux.HandleFunc("/profile", app.ProfilePage)
 	rMux.HandleFunc("/register", app.RegisterUser)
 	rMux.HandleFunc("/p", app.ViewProfile)
@@ -17,11 +17,12 @@ func (app *Applicaton) Routes() *mux.Router {
 	rMux.HandleFunc("/m", app.getMarkers).Methods("GET")
 	rMux.HandleFunc("/towork", app.updateMarkerToWork).Methods("POST")
 	rMux.HandleFunc("/savemarker", app.SaveMark)
-	rMux.HandleFunc("/photo", app.UploadPhoto)
+	rMux.HandleFunc("/photo", app.photoPathToHTML)
 	rMux.HandleFunc("/toreport", app.closeMarker)
 
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	rMux.Handle("/static/", http.StripPrefix("/static", fileServer))
+	fileServer := http.FileServer(http.Dir("./public"))
+
+	rMux.Handle("/public/", http.StripPrefix("/public", fileServer))
 
 	return rMux
 }

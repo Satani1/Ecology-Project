@@ -19,7 +19,7 @@ func (app *Applicaton) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ts, err := template.ParseFiles("./ui/html/index.html")
+	ts, err := template.ParseFiles("./public/html/index.html")
 	if err != nil {
 		app.ServeError(w, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -69,7 +69,7 @@ func (app *Applicaton) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
-		ts, err := template.ParseFiles("./ui/html/login.html")
+		ts, err := template.ParseFiles("./public/html/login.html")
 		if err != nil {
 			app.ServeError(w, err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -105,7 +105,7 @@ func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ts, err := template.ParseFiles("./ui/html/profile.html")
+	ts, err := template.ParseFiles("./public/html/profile.html")
 	if err != nil {
 		app.ServeError(w, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func (app *Applicaton) mapPage(w http.ResponseWriter, r *http.Request) {
 		app.NotFound(w)
 		return
 	}
-	ts, err := template.ParseFiles("./ui/html/mapTest.html")
+	ts, err := template.ParseFiles("./public/html/mapTest.html")
 	if err != nil {
 		app.ServeError(w, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -137,27 +137,6 @@ func (app *Applicaton) mapPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-//func (app *Applicaton) SaveMarker(w http.ResponseWriter, r *http.Request) {
-//	//check method
-//	if r.Method == "POST" {
-//		name := r.FormValue("marker-name")
-//		desc := r.FormValue("marker-description")
-//		add := r.FormValue("marker-address")
-//		if _, err := app.markersDB.Insert(name, desc, add); err != nil {
-//			app.ServeError(w, err)
-//			return
-//		}
-//		fmt.Fprintf(w, "name: %v\ndesc: %v\nadd: %v\n", name, desc, add)
-//		http.Redirect(w, r, "/map", http.StatusSeeOther)
-//
-//	} else {
-//		//return error404 if method wasn't POST
-//		app.NotFound(w)
-//		return
-//	}
-//
-//}
 
 func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 	//check method
@@ -175,7 +154,7 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		//filepath
-		var dstPath = "ui/html/photoDB/" + handler.Filename
+		var dstPath = "public/html/photoDB/" + handler.Filename
 		//create a file
 		dst, err := os.Create(dstPath)
 		if err != nil {
@@ -274,7 +253,7 @@ func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("File Size: %+v\n", handler.Size)
 		fmt.Printf("MIME Header: %+v\n", handler.Header)
 		//filepath
-		var dstPath = "ui/html/photoDB/" + handler.Filename
+		var dstPath = "public/html/photoDB/" + handler.Filename
 		//create a file
 		dst, err := os.Create(dstPath)
 		if err != nil {
@@ -282,16 +261,18 @@ func (app *Applicaton) UploadPhoto(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer dst.Close()
-
 		//saving a copy of file
 		if _, err = io.Copy(dst, file); err != nil {
 			app.ServeError(w, err)
 			return
 		}
-
 		fmt.Fprintf(w, "Successfully Uploaded File\n")
 	} else {
 		app.ServeError(w, errors.New("Error with http method"))
 		return
 	}
+}
+
+func (app *Applicaton) photoPathToHTML(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, `<html><body><h1>ХУЙ</h1></body></html>`)
 }

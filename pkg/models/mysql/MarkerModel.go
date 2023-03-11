@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"ecogoly/pkg/models"
 	"errors"
-	"log"
 )
 
 type MarkerModel struct {
@@ -46,24 +45,24 @@ func (m *MarkerModel) Get(id int) (*models.Marker2, error) {
 }
 
 func (m *MarkerModel) GetAll() (*[]models.Marker2, error) {
-	rows, err := m.DB.Query("SELECT mark_id, name, description, address, status FROM ecologydb.markers")
+	rows, err := m.DB.Query("SELECT mark_id, name, description, address, status, pathToPhoto FROM ecologydb.markers")
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer rows.Close()
 
 	markers := []models.Marker2{}
 	for rows.Next() {
 		var marker models.Marker2
-		err := rows.Scan(&marker.ID, &marker.Name, &marker.Description, &marker.Address, &marker.Status)
+		err := rows.Scan(&marker.ID, &marker.Name, &marker.Description, &marker.Address, &marker.Status, &marker.PathToPhoto)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		markers = append(markers, marker)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	return &markers, nil
 }
