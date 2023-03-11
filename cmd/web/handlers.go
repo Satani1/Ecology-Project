@@ -154,7 +154,7 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		//filepath
-		var dstPath = "public/html/photoDB/" + handler.Filename
+		var dstPath = "public/photoDB/" + handler.Filename
 		//create a file
 		dst, err := os.Create(dstPath)
 		if err != nil {

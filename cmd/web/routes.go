@@ -22,7 +22,7 @@ func (app *Applicaton) Routes() *mux.Router {
 
 	fileServer := http.FileServer(http.Dir("./public"))
 
-	rMux.Handle("/public/", http.StripPrefix("/public", fileServer))
+	rMux.PathPrefix("/public/").Handler(http.StripPrefix("/public", fileServer))
 
 	return rMux
 }
