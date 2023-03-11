@@ -10,10 +10,10 @@ type UserModel struct {
 	DB *sql.DB
 }
 
-func (m *UserModel) Insert(firstName, lastName string) (int, error) {
-	stmt := `insert into ecologydb.users (firstName, lastName, dateCreated) values (?, ?,utc_timestamp())`
+func (m *UserModel) Insert(firstName, lastName, email string) (int, error) {
+	stmt := `insert into ecologydb.users (firstName, lastName, email) values (?, ?, ?)`
 
-	result, err := m.DB.Exec(stmt, firstName, lastName)
+	result, err := m.DB.Exec(stmt, firstName, lastName, email)
 	if err != nil {
 		return 0, err
 	}
@@ -27,7 +27,7 @@ func (m *UserModel) Insert(firstName, lastName string) (int, error) {
 }
 
 func (m *UserModel) Get(id int) (*models.User, error) {
-	stmt := `select id, firstName,lastName, email from users where id = ?`
+	stmt := `select user_id, firstName, lastName, email from ecologydb.users where user_id = ?`
 
 	row := m.DB.QueryRow(stmt, id)
 
@@ -43,8 +43,4 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 	}
 
 	return s, nil
-}
-
-func (m *UserModel) Put(id int) error {
-	return nil
 }

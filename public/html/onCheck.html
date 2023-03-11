@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Профиль</title>
+    <title>Список точек</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,32 +47,34 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Данные пользователя</h1>
+<h1>Список точек, находящихся на проверке:</h1>
+<div class = "container">
     <table>
         <tr>
-            <th>Ваш ID:</th>
-            <td>{{.ID}}</td>
+            <th>ID Точки:</th>
+            <td></td>
         </tr>
         <tr>
-            <th>Email:</th>
-            <td>{{.Email}}</td>
+            <th>Название:</th>
+            <td></td>
         </tr>
         <tr>
-            <th>Имя:</th>
-            <td>{{.FirstName}}</td>
+            <th>Описание:</th>
+            <td></td>
         </tr>
         <tr>
-            <th>Фамилия:</th>
-            <td>{{.LastName}}</td>
+            <th>Фотографии:</th>
+            <td></td>
         </tr>
         <tr>
-            <th>Созданные метки:</th>
-            <td>{{.Marks}}</td>
+            <th>ID пользователя создавшего точку:</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>ID пользователя, который убрал точку:</th>
+            <td></td>
         </tr>
     </table>
-    <a href="/">Главная</a>
-    <a href="/map">Карта</a>
 </div>
 </body>
 </html>

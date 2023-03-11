@@ -63,11 +63,14 @@ func (app *Applicaton) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		name := r.FormValue("name")
 		surname := r.FormValue("surname")
-		if _, err := app.usersDB.Insert(name, surname); err != nil {
+		email := r.FormValue("email")
+		id, err := app.usersDB.Insert(name, surname, email)
+		if err != nil {
 			app.ServeError(w, err)
 			return
 		}
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		strID := strconv.Itoa(id)
+		http.Redirect(w, r, "/profile?id="+strID, http.StatusSeeOther)
 	} else {
 		ts, err := template.ParseFiles("./public/html/login.html")
 		if err != nil {
@@ -85,7 +88,7 @@ func (app *Applicaton) RegisterUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/p" {
+	if r.URL.Path != "/profile" {
 		app.NotFound(w)
 		return
 	}
@@ -105,6 +108,12 @@ func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	mark, err := app.markersDB.CountUserMarks(id)
+	if err != nil {
+		app.ServeError(w, err)
+		return
+	}
+	s.Marks = mark.New + mark.InWork + mark.Done
 	ts, err := template.ParseFiles("./public/html/profile.html")
 	if err != nil {
 		app.ServeError(w, err)
@@ -144,7 +153,12 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("marker-name")
 		desc := r.FormValue("marker-description")
 		add := r.FormValue("marker-address")
-
+		user_id := r.FormValue("user-id")
+		uID, err := strconv.Atoi(user_id)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
 		//get handler for filename, size and headers
 		file, handler, err := r.FormFile("marker-photo")
 		if err != nil {
@@ -169,7 +183,7 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//insert text data and path to photo in the db markerks
-		_, err = app.markersDB.Insert(name, desc, add, dstPath)
+		_, err = app.markersDB.Insert(name, desc, add, dstPath, uID)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -194,12 +208,19 @@ func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
 }
 func (app *Applicaton) updateMarkerToWork(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
+
+		userID := r.FormValue("userID-clean")
+		uID, err := strconv.Atoi(userID)
+		if err != nil {
+			app.ServeError(w, err)
+			return
+		}
 		id, err := strconv.Atoi(r.URL.Query().Get("id"))
 		if err != nil {
 			app.ServeError(w, err)
 			return
 		}
-		err = app.markersDB.UpdateMarkerToWork(id)
+		err = app.markersDB.UpdateMarkerToWork(id, uID)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -220,11 +241,16 @@ func (app *Applicaton) closeMarker(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = app.markersDB.Delete(id)
+		err = app.markersDB.UpdateMarkerToCheck(id)
 		if err != nil {
 			app.ServeError(w, err)
 			return
 		}
+		//err = app.markersDB.Delete(id)
+		//if err != nil {
+		//	app.ServeError(w, err)
+		//	return
+		//}
 
 		http.Redirect(w, r, "/map", http.StatusSeeOther)
 	} else {

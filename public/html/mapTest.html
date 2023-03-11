@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Создание метки на карте</title>
+    <title>Карта</title>
     <meta charset="utf-8">
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=bfcc685c-c4be-4b2f-a3c4-da8b7e90fc24" type="text/javascript"></script>
     <style type="text/css">
@@ -26,10 +26,12 @@
 </head>
 <body>
 <div id="map" style="width: 100%; height: 600px;"></div>
-<button id="add-marker-btn">Создать метку</button>
-<div id = "divMarker">
+<button id="add-marker-btn" onclick="ShowHideForm()" >Создать метку</button>
+<div id = "mark-block" style = "display: none">
     <h3>Введите данные метки</h3>
     <form id="marker-form-data" enctype = "multipart/form-data" method="POST" action="/savemarker">
+        <label for="marker-address">Ваш ID:</label><br>
+        <input type="text" id="user-id" name="user-id" required><br>
         <label for="marker-name">Название:</label><br>
         <input type="text" id="marker-name" name="marker-name" required><br>
         <label for="marker-description">Описание:</label><br>
@@ -41,8 +43,6 @@
         <button type="submit">Отправить данные</button>
     </form>
 </div>
-<img src="/public/photoDB/1.jpg" height="800" width="1000" alt = "photo">
-
 </body>
 <script type = text/javascript>
     ymaps.ready(init);
@@ -70,13 +70,17 @@
                             var dynamicBlock;
                             if (place.status == "Новая"){
                                 dynamicBlock = '<form action='+actionID+' method="POST">\n' +
+                                    '<label>Введите ваш ID:</label>' +
+                                    '<input type = "text" id="userID-clean" name="userID-clean" required><br><br>'+
                                 '<input type="submit" name="upvote" value="Я хочу здесь убраться!" />\n' +
                                 '</form>'
                             } else if (place.status == "В работе") {
                                 dynamicBlock =
                                     '<button onClick="ShowHideForm()">Фото отчет</button>' +
-                                    '<div id="MarkerReport">' +
+                                    '<div id="mark-block" style = "display:none">' +
                                     '<form action='+actionReport+ ' enctype="multipart/form-data" method="POST">' +
+                                    '<br><label>Введите ваш ID:</label>' +
+                                    '<input type = "text" id="userID-clean" name="userID-clean" required><br>'+
                                     '<br><input type = "file" id="marker-photo-report" name = "marker-photo-report" multiple accept="image/*"><br><br>'+
                                     '<input type="submit" name="upvote" value="Отправить"/>'+
                                     '</form>' +
@@ -106,7 +110,7 @@
     }
 
     function ShowHideForm(){
-        var x = document.getElementById("MarkerReport");
+        var x = document.getElementById("mark-block");
         if (x.style.display === "none") {
             x.style.display = "block";
         } else {

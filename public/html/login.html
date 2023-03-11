@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register / Login</title>
+    <title>Регистрация</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,39 +55,18 @@
 </head>
 <body>
 <form method="post" action="/register">
-    <h1>Sign Up</h1>
+    <h1>Регистрация</h1>
 
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="username">Email:</label>
+    <label for="email">Электронная почта:</label>
     <input type="text" id="email" name="email" required>
 
-    <label for="name">First name:</label>
+    <label for="name">Ваше имя:</label>
     <input type="text" id="name" name="name" required>
 
-    <label for="surname">Last name:</label>
+    <label for="surname">Ваша фамилия:</label>
     <input type="text" id="surname" name="surname" required>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-
-    <label for="confirm-password">Confirm password:</label>
-    <input type="password" id="confirm-password" name="confirm-password" required>
-
-    <button type="submit">Register</button>
-    <div class="error"></div>
-</form>
-
-<form method="post" action="/login">
-    <h1>Sign In</h1>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Login</button>
+    <button type="submit">Зарегестрироваться</button>
     <div class="error"></div>
 </form>
 </body>

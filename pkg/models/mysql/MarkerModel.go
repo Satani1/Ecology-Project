@@ -10,10 +10,10 @@ type MarkerModel struct {
 	DB *sql.DB
 }
 
-func (m *MarkerModel) Insert(name, desc, addr, pathTo string) (int, error) {
-	stmt := `insert into ecologydb.markers (name, description, address, pathToPhoto) values (?, ?, ?, ?)`
+func (m *MarkerModel) Insert(name, desc, addr, pathTo string, userId int) (int, error) {
+	stmt := `insert into ecologydb.markers (name,description, address, pathToPhoto, fromUserID) values (?, ?, ?, ?, ?)`
 
-	result, err := m.DB.Exec(stmt, name, desc, addr, pathTo)
+	result, err := m.DB.Exec(stmt, name, desc, addr, pathTo, userId)
 	if err != nil {
 		return 0, err
 	}
@@ -45,7 +45,7 @@ func (m *MarkerModel) Get(id int) (*models.Marker2, error) {
 }
 
 func (m *MarkerModel) GetAll() (*[]models.Marker2, error) {
-	rows, err := m.DB.Query("SELECT mark_id, name, description, address, status, pathToPhoto FROM ecologydb.markers")
+	rows, err := m.DB.Query("SELECT mark_id, name, description, address, status, pathToPhoto FROM ecologydb.markers where status <> 'На проверке'")
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +67,19 @@ func (m *MarkerModel) GetAll() (*[]models.Marker2, error) {
 	return &markers, nil
 }
 
-func (m *MarkerModel) UpdateMarkerToWork(id int) error {
-	stmt := `update ecologyDB.markers set status = "В работе" where mark_id = ? and status = "Новая";`
+func (m *MarkerModel) UpdateMarkerToWork(id, userID int) error {
+	stmt := `update ecologyDB.markers set status = "В работе", userCleanID = ? where mark_id = ? and status = "Новая";`
+
+	_, err := m.DB.Exec(stmt, userID, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *MarkerModel) UpdateMarkerToCheck(id int) error {
+	stmt := `update ecologyDB.markers set status = "На проверке" where mark_id = ? and (status = "Новая" or status = "В работе")`
 
 	_, err := m.DB.Exec(stmt, id)
 	if err != nil {
@@ -105,4 +116,47 @@ func (m *MarkerModel) GetPhotoPath(id int) (string, error) {
 		}
 	}
 	return s.PathToPhoto, nil
+}
+
+func (m *MarkerModel) CountUserMarks(id int) (*models.Rating, error) {
+	//queries
+	stmt := `select count(*) from ecologydb.markers where fromUserId = ? and status = 'Новая'`
+	stmt2 := `select count(*) from ecologydb.markers where fromUserId = ? and status = 'В работе'`
+	stmt3 := `select count(*) from ecologydb.markers where fromUserId = ? and status = 'На проверке'`
+	//exes
+	row := m.DB.QueryRow(stmt, id)
+	row2 := m.DB.QueryRow(stmt2, id)
+	row3 := m.DB.QueryRow(stmt3, id)
+
+	s := &models.Rating{}
+
+	//errors handling
+	err := row.Scan(&s.New)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	err = row2.Scan(&s.InWork)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	err = row3.Scan(&s.Done)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return s, nil
 }
