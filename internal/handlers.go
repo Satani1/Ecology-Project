@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"ecogoly/pkg/models"
@@ -41,7 +41,7 @@ func (app *Applicaton) MapPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := app.usersDB.Get(id)
+	s, err := app.UsersDB.Get(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.NotFound(w)
@@ -64,7 +64,7 @@ func (app *Applicaton) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		surname := r.FormValue("surname")
 		email := r.FormValue("email")
-		id, err := app.usersDB.Insert(name, surname, email)
+		id, err := app.UsersDB.Insert(name, surname, email)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -98,7 +98,7 @@ func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := app.usersDB.Get(id)
+	s, err := app.UsersDB.Get(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.NotFound(w)
@@ -108,7 +108,7 @@ func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mark, err := app.markersDB.CountUserMarks(id)
+	mark, err := app.MarkersDB.CountUserMarks(id)
 	if err != nil {
 		app.ServeError(w, err)
 		return
@@ -183,7 +183,7 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//insert text data and path to photo in the db markerks
-		_, err = app.markersDB.Insert(name, desc, add, dstPath, uID)
+		_, err = app.MarkersDB.Insert(name, desc, add, dstPath, uID)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -198,7 +198,7 @@ func (app *Applicaton) SaveMark(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
-	markers, err := app.markersDB.GetAll()
+	markers, err := app.MarkersDB.GetAll()
 	if err != nil {
 		app.ServeError(w, err)
 		return
@@ -220,7 +220,7 @@ func (app *Applicaton) updateMarkerToWork(w http.ResponseWriter, r *http.Request
 			app.ServeError(w, err)
 			return
 		}
-		err = app.markersDB.UpdateMarkerToWork(id, uID)
+		err = app.MarkersDB.UpdateMarkerToWork(id, uID)
 		if err != nil {
 			app.ServeError(w, err)
 			return
@@ -241,7 +241,7 @@ func (app *Applicaton) closeMarker(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = app.markersDB.UpdateMarkerToCheck(id)
+		err = app.MarkersDB.UpdateMarkerToCheck(id)
 		if err != nil {
 			app.ServeError(w, err)
 			return
