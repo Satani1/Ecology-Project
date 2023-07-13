@@ -54,39 +54,6 @@ func (app *Applicaton) MapPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%v", s)
 }
 
-// user profile page
-func (app *Applicaton) ProfilePage(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func (app *Applicaton) RegisterUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		name := r.FormValue("name")
-		surname := r.FormValue("surname")
-		email := r.FormValue("email")
-		id, err := app.UsersDB.Insert(name, surname, email)
-		if err != nil {
-			app.ServeError(w, err)
-			return
-		}
-		strID := strconv.Itoa(id)
-		http.Redirect(w, r, "/profile?id="+strID, http.StatusSeeOther)
-	} else {
-		ts, err := template.ParseFiles("./public/html/login.html")
-		if err != nil {
-			app.ServeError(w, err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		err = ts.Execute(w, nil)
-		if err != nil {
-			app.ServeError(w, err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
-}
-
 func (app *Applicaton) ViewProfile(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/profile" {
 		app.NotFound(w)
@@ -206,6 +173,7 @@ func (app *Applicaton) getMarkers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(markers)
 }
+
 func (app *Applicaton) updateMarkerToWork(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
@@ -246,11 +214,6 @@ func (app *Applicaton) closeMarker(w http.ResponseWriter, r *http.Request) {
 			app.ServeError(w, err)
 			return
 		}
-		//err = app.markersDB.Delete(id)
-		//if err != nil {
-		//	app.ServeError(w, err)
-		//	return
-		//}
 
 		http.Redirect(w, r, "/map", http.StatusSeeOther)
 	} else {

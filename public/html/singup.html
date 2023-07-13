@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F6F6F6;
+            color: #333333;
+            padding: 10px;
+        }
+        form {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #888888;
+            width: 500px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 96%;
+            padding: 10px;
+            border: 1px solid #CCCCCC;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .button-37 {
+            width: 225px;
+            height: 50px;
+            background-color: green;
+            border: 1px solid forestgreen;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            outline: none;
+            outline: 0;
+            padding: 30px 30px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 200ms, box-shadow 200ms;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+
+        }
+
+        .button-37:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            background-color: forestgreen;
+            transform: translateY(-4px);
+        }
+
+        @media (min-width: 768px) {
+            .button-37 {
+                padding: 10px 30px;
+            }
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<form method="post" action="/register">
+    <h1>Регистрация</h1>
+
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="surname">Фамилия:</label>
+    <input type="text" id="surname" name="surname" required>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button class="button-37" type="submit" role="button">Зарегестрироваться</button>
+    <div class="error"></div>
+</form>
+</body>
+</html>

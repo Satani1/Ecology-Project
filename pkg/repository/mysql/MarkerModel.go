@@ -26,12 +26,12 @@ func (m *MarkerModel) Insert(name, desc, addr, pathTo string, userId int) (int, 
 	return int(id), nil
 }
 
-func (m *MarkerModel) Get(id int) (*models.Marker2, error) {
+func (m *MarkerModel) Get(id int) (*models.Marker, error) {
 	stmt := `select name, description, address from ecologydb.markers where mark_id = ?`
 
 	row := m.DB.QueryRow(stmt, id)
 
-	s := &models.Marker2{}
+	s := &models.Marker{}
 
 	err := row.Scan(&s.ID, &s.Name, &s.Description, &s.Address)
 	if err != nil {
@@ -44,16 +44,16 @@ func (m *MarkerModel) Get(id int) (*models.Marker2, error) {
 	return s, nil
 }
 
-func (m *MarkerModel) GetAll() (*[]models.Marker2, error) {
+func (m *MarkerModel) GetAll() (*[]models.Marker, error) {
 	rows, err := m.DB.Query("SELECT mark_id, name, description, address, status, pathToPhoto FROM ecologydb.markers where status <> 'На проверке'")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	markers := []models.Marker2{}
+	markers := []models.Marker{}
 	for rows.Next() {
-		var marker models.Marker2
+		var marker models.Marker
 		err := rows.Scan(&marker.ID, &marker.Name, &marker.Description, &marker.Address, &marker.Status, &marker.PathToPhoto)
 		if err != nil {
 			return nil, err
@@ -105,7 +105,7 @@ func (m *MarkerModel) GetPhotoPath(id int) (string, error) {
 
 	row := m.DB.QueryRow(stmt, id)
 
-	s := &models.Marker2{}
+	s := &models.Marker{}
 
 	err := row.Scan(&s.PathToPhoto)
 	if err != nil {

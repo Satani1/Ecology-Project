@@ -14,7 +14,7 @@ type User struct {
 	Marks     int    `json:"rating"`
 }
 
-type Marker2 struct {
+type Marker struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
