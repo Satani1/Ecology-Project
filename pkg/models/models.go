@@ -7,11 +7,10 @@ import (
 var ErrNoRecord = errors.New("models: no matching entry was found")
 
 type User struct {
-	ID        int    `json:"ID"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
-	Marks     int    `json:"rating"`
+	UID      string `json:"uid"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Marks    int    `json:"rating"`
 }
 
 type Marker struct {

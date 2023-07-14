@@ -1,16 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset='utf-8'>
-    <title>Карта волонтера</title>
+    <title>Главная</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;500;600&display=swap');
+        .but{
+            float:right;
+            margin-top:20px;
+            padding-right: 160px;
+        }
+        .button-37 {
+            width: 300px;
+            height: 75px;
+            background-color: green;
+            border: 1px solid forestgreen;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-family: Raleway;
+            font-size: 32px;
+            font-weight: 400;
+            outline: none;
+            outline: 0;
+            padding: 30px 30px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 200ms, box-shadow 200ms;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
 
-    <link rel='stylesheet' href='/s/static/css/main.css'>
+        }
+
+        .button-37:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            transform: translateY(-4px);
+        }
+
+        @media (min-width: 768px) {
+            .button-37 {
+                padding: 10px 30px;
+            }
+        }
+
+
+        .container {
+            margin: 0px 60px 10px 160px;
+        }
+        .header-line {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            /*color: rgba(18,18,18,0.75);*/
+            color:black;
+            text-decoration: none;
+            font-size: 16px;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            margin-right: 72px;
+        }
+        .nav-item:hover{
+            color:grey;
+        }
+        .logo {
+            text-decoration: none;
+            color: forestgreen;
+            font-family: 'Raleway';
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .logo:hover{
+            color:grey;
+        }
+
+    </style>
 </head>
+
+
 <body>
-    <header>
-        <h1><a href="/map">Экологический социальный проект - карта волонтера</a></h1>
-        <h2><a href="/register">Регистрация</a></h2>
-        <h2><a href="/map">Карта</a></h2>
-    </header>
+<header>
+    <div class="container">
+        <div class="header-line">
+            <div class="header-logo">
+
+                <a class = "logo" href="/">
+                    Лист
+                </a>
+            </div>
+            <div class="nav">
+                <a class="nav-item" href="/map">Карта</a>
+                <a class="nav-item" href="/profile">Профиль</a>
+                <a class="nav-item" href="/register">Sign In/Up</a>
+            </div>
+        </div>
+    </div>
+</header>
 </body>
-</html>

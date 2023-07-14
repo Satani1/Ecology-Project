@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <title>Профиль</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-
-        .container {
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;500;600&display=swap');
+        .container2 {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -22,12 +18,14 @@
             text-align: center;
             font-size: 36px;
             margin-bottom: 20px;
+            font-family: Raleway;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-family: Raleway;
         }
 
         th, td {
@@ -44,35 +42,122 @@
         td {
             font-size: 16px;
         }
+
+
+
+        .but{
+            float:right;
+            margin-top:20px;
+            padding-right: 160px;
+        }
+        .button-37 {
+            width: 150px;
+            height: 50px;
+            background-color: darkred;
+            border: 1px solid darkred;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-family: Raleway;
+            font-size: 20px;
+            font-weight: 400;
+            outline: none;
+            outline: 0;
+            padding: 30px 30px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 200ms, box-shadow 200ms;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+
+        }
+
+        .button-37:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            transform: translateY(-4px);
+        }
+
+        @media (min-width: 768px) {
+            .button-37 {
+                padding: 10px 30px;
+            }
+        }
+
+
+        .container {
+            margin: 0px 60px 10px 160px;
+        }
+        .header-line {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            color:black;
+            text-decoration: none;
+            font-size: 16px;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            margin-right: 72px;
+        }
+        .nav-item:hover{
+            color:grey;
+        }
+        .logo {
+            text-decoration: none;
+            color: forestgreen;
+            font-family: Raleway;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .logo:hover{
+            color:grey;
+        }
+
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Данные пользователя</h1>
+<header>
+    <div class="container">
+        <div class="header-line">
+            <div class="header-logo">
+
+                <a class = "logo" href="/">
+                    Лист
+                </a>
+            </div>
+            <div class="nav">
+                <a class="nav-item" href="/map">Карта</a>
+                <a class="nav-item" href="/profile">Профиль</a>
+                <a class="nav-item" href="/register">Sign In/Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container2">
+    <h1>Ваш профиль</h1>
     <table>
         <tr>
             <th>Ваш ID:</th>
-            <td>{{.ID}}</td>
-        </tr>
-        <tr>
-            <th>Email:</th>
-            <td>{{.Email}}</td>
+            <td>{{.UID}}</td>
         </tr>
         <tr>
             <th>Имя:</th>
-            <td>{{.FirstName}}</td>
-        </tr>
-        <tr>
-            <th>Фамилия:</th>
-            <td>{{.LastName}}</td>
+            <td>{{.Name}}</td>
         </tr>
         <tr>
             <th>Созданные метки:</th>
             <td>{{.Marks}}</td>
         </tr>
     </table>
-    <a href="/">Главная</a>
-    <a href="/map">Карта</a>
+    <div>
+        <button class="button-37" onclick="location.href='/quit';">Выйти</button>
+    </div>
 </div>
 </body>
 </html>

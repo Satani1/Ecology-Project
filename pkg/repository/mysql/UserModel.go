@@ -2,8 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-	"ecogoly/pkg/models"
-	"errors"
 )
 
 type UserModel struct {
@@ -26,21 +24,21 @@ func (m *UserModel) Insert(firstName, lastName, email string) (int, error) {
 	return int(id), nil
 }
 
-func (m *UserModel) Get(id int) (*models.User, error) {
-	stmt := `select user_id, firstName, lastName, email from ecologydb.users where user_id = ?`
-
-	row := m.DB.QueryRow(stmt, id)
-
-	s := &models.User{}
-
-	err := row.Scan(&s.ID, &s.FirstName, &s.LastName, &s.Email)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, models.ErrNoRecord
-		} else {
-			return nil, err
-		}
-	}
-
-	return s, nil
-}
+//func (m *UserModel) Get(id int) (*models.User, error) {
+//	stmt := `select user_id, firstName, lastName, email from ecologydb.users where user_id = ?`
+//
+//	row := m.DB.QueryRow(stmt, id)
+//
+//	s := &models.User{}
+//
+//	err := row.Scan(&s.ID, &s.FirstName, &s.LastName, &s.Email)
+//	if err != nil {
+//		if errors.Is(err, sql.ErrNoRows) {
+//			return nil, models.ErrNoRecord
+//		} else {
+//			return nil, err
+//		}
+//	}
+//
+//	return s, nil
+//}
